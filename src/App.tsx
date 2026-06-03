@@ -854,8 +854,8 @@ export default function App() {
       </main>
 
       {/* Rodapé */}
-      <footer className="shrink-0 bg-white border-t border-slate-100 px-6 py-2 flex items-center justify-between">
-        <img src="/logos/logo-soberania.svg" alt="Soberania IA" className="h-8 w-auto object-contain opacity-75" />
+      <footer className="shrink-0 bg-white border-t border-slate-100 px-6 py-2 flex items-center justify-center md:justify-between">
+        <img src="/logos/logo-soberania.svg" alt="Soberania IA" className="hidden md:block h-8 w-auto object-contain opacity-75" />
         <img src="/logos/logo-sia.svg" alt="SIA" className="h-8 w-auto object-contain opacity-85" />
       </footer>
 
