@@ -170,7 +170,7 @@ function AuthView({ onAuth, error }: {
             <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 space-y-3">
               <p className="text-xs font-bold text-blue-700 uppercase tracking-wider">Proteção de Dados — LGPD</p>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Ao participar, você autoriza a <strong>Secretaria de Inovação e Aceleração (SIA)</strong> a coletar seu <strong>nome, WhatsApp e escola</strong> exclusivamente para organização e exibição do ranking da <em>Batalha de Prompts — Piauí para o Mundo</em>, conforme a <strong>Lei Geral de Proteção de Dados (Lei nº 13.709/2018)</strong>. Os dados serão usados somente durante o evento e não serão compartilhados com terceiros.
+                Ao participar, você autoriza a <strong>Secretaria de Inteligência Artificial (SIA)</strong> a coletar seu <strong>nome, WhatsApp e escola</strong> exclusivamente para organização e exibição do ranking da <em>Batalha de Prompts — Piauí para o Mundo</em>, conforme a <strong>Lei Geral de Proteção de Dados (Lei nº 13.709/2018)</strong>. Os dados serão usados somente durante o evento e não serão compartilhados com terceiros.
               </p>
               <label className="flex items-start space-x-3 cursor-pointer group">
                 <input
