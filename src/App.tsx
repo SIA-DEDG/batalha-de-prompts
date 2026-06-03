@@ -83,18 +83,20 @@ function AuthView({ onAuth, error }: {
     <div className="flex flex-col h-full md:flex-row md:h-full">
 
       {/* Painel esquerdo — desktop */}
-      <div className="hidden md:flex md:w-2/5 bg-gradient-to-br from-purple-700 via-indigo-700 to-slate-900 flex-col items-center justify-center p-12 text-white">
-        <img src="/logos/logo-evento.png" alt="Piauí para o Mundo" className="h-40 w-auto object-contain mb-8 drop-shadow-2xl" />
-        <p className="text-white/60 text-center text-base max-w-xs">
-          {isAdminPhone ? 'Acesso administrativo. Digite a senha para continuar.' : 'Faça seu cadastro uma vez e participe da maior Batalha de Prompts do Piauí!'}
-        </p>
-        <div className="mt-10">
-          <img src="/logos/logo-soberania.png" alt="Soberania IA" className="h-12 w-auto object-contain opacity-80" />
+      <div className="hidden md:flex md:w-2/5 bg-gradient-to-br from-purple-700 via-indigo-700 to-slate-900 flex-col items-center justify-between p-12 text-white">
+        <div />
+        <div className="flex flex-col items-center">
+          <img src="/logos/logo-evento.png" alt="Piauí para o Mundo" className="h-40 w-auto object-contain mb-8 drop-shadow-2xl" />
+          <p className="text-white/60 text-center text-base max-w-xs">
+            {isAdminPhone ? 'Acesso administrativo. Digite a senha para continuar.' : 'Faça seu cadastro uma vez e participe da maior Batalha de Prompts do Piauí!'}
+          </p>
         </div>
+        <img src="/logos/logo-soberania.svg" alt="Soberania IA" className="h-12 w-auto object-contain opacity-80" />
       </div>
 
       {/* Formulário */}
-      <div className="flex flex-col flex-1 overflow-y-auto p-6 md:p-12 md:justify-center bg-slate-50">
+      <div className="relative flex flex-col flex-1 overflow-y-auto p-6 md:p-12 md:justify-center bg-slate-50">
+        <img src="/logos/logo-sia.svg" alt="SIA" className="absolute top-4 right-4 h-12 w-auto object-contain opacity-90 z-10" />
 
         {/* Logo mobile */}
         <div className="flex flex-col items-center md:hidden mb-8 space-y-3">
@@ -199,8 +201,9 @@ function HomeView({ player, alreadyPlayed, session, isAdmin, onStart, onRanking,
         <p className="text-white/60 text-center text-base max-w-sm relative z-10">
           A maior Batalha de Prompts do Piauí. Domine a IA e conquiste o ranking!
         </p>
-        <div className="mt-10 relative z-10">
-          <img src="/logos/logo-soberania.png" alt="Soberania IA" className="h-12 w-auto object-contain opacity-80" />
+        <div className="mt-10 relative z-10 flex flex-col items-center space-y-3">
+          <img src="/logos/logo-soberania.svg" alt="Soberania IA" className="h-10 w-auto object-contain opacity-80" />
+          <img src="/logos/logo-sia.svg" alt="SIA" className="h-14 w-auto object-contain opacity-80" />
         </div>
       </div>
 
@@ -792,19 +795,6 @@ export default function App() {
   return (
     <div className="h-[100dvh] bg-slate-50 flex flex-col font-sans text-slate-900 overflow-hidden">
 
-      {/* Header — mobile e desktop */}
-      <header className="flex items-center justify-between px-4 md:px-8 py-2 bg-white border-b border-slate-200 shrink-0">
-        <img src="/logos/logo-secretaria.png" alt="Secretaria de Inovação" className="h-8 md:h-9 w-auto object-contain opacity-90" />
-        <div className="flex items-center space-x-3">
-          {player && currentView !== 'HOME' && currentView !== 'AUTH' && (
-            <button onClick={() => setCurrentView('HOME')} className="text-sm text-slate-500 hover:text-slate-700 font-medium">
-              Início
-            </button>
-          )}
-          <img src="/logos/logo-evento.png" alt="Piauí para o Mundo" className="h-8 md:h-9 w-auto object-contain" />
-        </div>
-      </header>
-
       {/* Conteúdo */}
       <main className="flex-1 min-h-0 flex flex-col md:px-6 md:pt-4 md:pb-0">
         <div className="flex-1 min-h-0 md:bg-white md:rounded-2xl md:shadow-sm md:border md:border-slate-200 overflow-hidden flex flex-col">
@@ -862,14 +852,6 @@ export default function App() {
         </div>
       </main>
 
-      {/* Rodapé */}
-      <footer className="shrink-0 bg-white border-t border-slate-100 px-6 py-2 flex items-center justify-between">
-        <img src="/logos/logo-secretaria.png" alt="Secretaria de Inovação" className="h-7 w-auto object-contain opacity-75" />
-        <div className="flex items-center space-x-1.5">
-          <span className="text-xs text-slate-400">IA:</span>
-          <img src="/logos/logo-soberania.png" alt="Soberania IA" className="h-10 w-auto object-contain opacity-75" />
-        </div>
-      </footer>
     </div>
   );
 }
