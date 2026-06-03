@@ -56,6 +56,7 @@ function AuthView({ onAuth, error }: {
   error: string;
 }) {
   const [form, setForm] = useState({ name: '', phone: '', school: '', password: '' });
+  const [lgpdAccepted, setLgpdAccepted] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
   const isAdminPhone = form.phone.replace(/\D/g, '') === ADMIN_PHONE;
@@ -164,12 +165,41 @@ function AuthView({ onAuth, error }: {
               onChange={() => setForm(f => ({ ...f, school: 'Secretaria de IA' }))} />
           )}
 
+          {/* Consentimento LGPD — só para participantes */}
+          {!isAdminPhone && (
+            <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 space-y-3">
+              <p className="text-xs font-bold text-blue-700 uppercase tracking-wider">Proteção de Dados — LGPD</p>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Ao participar, você autoriza a <strong>Secretaria de Inovação e Aceleração (SIA)</strong> a coletar seu <strong>nome, WhatsApp e escola</strong> exclusivamente para organização e exibição do ranking da <em>Batalha de Prompts — Piauí para o Mundo</em>, conforme a <strong>Lei Geral de Proteção de Dados (Lei nº 13.709/2018)</strong>. Os dados serão usados somente durante o evento e não serão compartilhados com terceiros.
+              </p>
+              <label className="flex items-start space-x-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  required
+                  checked={lgpdAccepted}
+                  onChange={e => setLgpdAccepted(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 accent-purple-600 shrink-0 cursor-pointer"
+                />
+                <span className="text-xs text-slate-700 font-medium group-hover:text-slate-900 transition-colors">
+                  Li e concordo com o uso dos meus dados conforme descrito acima.
+                </span>
+              </label>
+            </div>
+          )}
+
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-2xl px-4 py-3">⚠️ {error}</div>
           )}
 
           <button type="submit"
-            className={`w-full py-4 rounded-2xl font-bold text-lg shadow-lg transition-all flex items-center justify-center space-x-2 active:scale-95 mt-2 ${isAdminPhone ? 'bg-gradient-to-r from-slate-700 to-slate-900 hover:from-slate-800 hover:to-black text-white' : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white'}`}>
+            disabled={!isAdminPhone && !lgpdAccepted}
+            className={`w-full py-4 rounded-2xl font-bold text-lg shadow-lg transition-all flex items-center justify-center space-x-2 active:scale-95 mt-2 ${
+              isAdminPhone
+                ? 'bg-gradient-to-r from-slate-700 to-slate-900 hover:from-slate-800 hover:to-black text-white'
+                : lgpdAccepted
+                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white'
+                  : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+            }`}>
             {isAdminPhone ? <Shield className="w-5 h-5 text-yellow-400" /> : <ArrowRight className="w-5 h-5" />}
             <span>{isAdminPhone ? 'Acessar Painel Admin' : 'Entrar na Batalha'}</span>
           </button>
