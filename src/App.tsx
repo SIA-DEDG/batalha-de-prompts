@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Trophy, Play, User, Phone, School, MapPin,
   Sparkles, ArrowRight, Crown, Loader2, FileText,
-  Moon, LogIn, Shield, Trash2, RefreshCw, AlertTriangle
+  Moon, LogIn, Shield, Trash2, RefreshCw, AlertTriangle, ChevronLeft
 } from 'lucide-react';
 import { generateItineraryAndScore } from './services/aiService';
 import type { ScoreCriteria } from './services/aiService';
@@ -498,11 +498,13 @@ function RankingView({ rankingData, rankingLoading, currentPlayerId, onBack }: {
   return (
     <div className="flex flex-col h-full md:flex-row md:h-full">
       <div className="md:w-2/5 md:bg-gradient-to-b md:from-purple-700 md:to-indigo-800 md:flex md:flex-col md:p-8 md:text-white md:overflow-y-auto">
-        <div className="flex items-center mb-6">
-          <button onClick={onBack} className="p-2 -ml-2 text-slate-400 md:text-white/70 hover:text-slate-600 md:hover:text-white">
-            <Crown className="w-6 h-6" />
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-slate-800 md:text-white">Ranking Geral</h2>
+          <button onClick={onBack}
+            className="flex items-center space-x-1.5 px-4 py-2 bg-slate-100 md:bg-white/10 hover:bg-slate-200 md:hover:bg-white/20 text-slate-600 md:text-white rounded-xl font-semibold text-sm transition-all">
+            <ChevronLeft className="w-4 h-4" />
+            <span>Início</span>
           </button>
-          <h2 className="text-2xl font-bold text-slate-800 md:text-white ml-2">Ranking Geral</h2>
         </div>
         {!rankingLoading && rankingData.length >= 3 && (
           <div className="bg-gradient-to-b from-purple-600 to-indigo-700 md:bg-none rounded-3xl p-6 md:p-0 text-white mb-4 md:mb-0 md:flex-1 shadow-lg md:shadow-none relative overflow-hidden">
