@@ -95,8 +95,7 @@ function AuthView({ onAuth, error }: {
       </div>
 
       {/* Formulário */}
-      <div className="relative flex flex-col flex-1 overflow-y-auto p-6 md:p-12 md:justify-center bg-slate-50">
-        <img src="/logos/logo-sia.svg" alt="SIA" className="absolute top-4 right-4 h-12 w-auto object-contain opacity-90 z-10" />
+      <div className="flex flex-col flex-1 overflow-y-auto p-6 md:p-12 md:justify-center bg-slate-50">
 
         {/* Logo mobile */}
         <div className="flex flex-col items-center md:hidden mb-8 space-y-3">
@@ -853,6 +852,12 @@ export default function App() {
           </div>
         </div>
       </main>
+
+      {/* Rodapé */}
+      <footer className="shrink-0 bg-white border-t border-slate-100 px-6 py-2 flex items-center justify-between">
+        <img src="/logos/logo-soberania.svg" alt="Soberania IA" className="h-8 w-auto object-contain opacity-75" />
+        <img src="/logos/logo-sia.svg" alt="SIA" className="h-8 w-auto object-contain opacity-85" />
+      </footer>
 
     </div>
   );
