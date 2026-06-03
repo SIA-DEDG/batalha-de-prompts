@@ -69,6 +69,11 @@ function AuthView({ onAuth, error }: {
         setPasswordError('Senha incorreta. Tente novamente.');
         return;
       }
+      // Admin: school é preenchida automaticamente
+      if (form.name && form.phone) {
+        onAuth(form.name, form.phone, 'Secretaria de IA');
+      }
+      return;
     }
 
     if (form.name && form.phone && form.school) onAuth(form.name, form.phone, form.school);
