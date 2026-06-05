@@ -13,8 +13,8 @@ function json(data: unknown, status = 200) {
 }
 
 async function callAI(messages: { role: string; content: string }[]): Promise<string> {
-  const apiKey  = Deno.env.get('AI_API_KEY')!;
-  const model   = Deno.env.get('AI_MODEL')!;
+  const apiKey = Deno.env.get('AI_API_KEY')!;
+  const model = Deno.env.get('AI_MODEL')!;
   const baseUrl = Deno.env.get('AI_API_URL')!;
 
   const res = await fetch(`${baseUrl}v1/chat/completions`, {
@@ -33,7 +33,7 @@ async function callAI(messages: { role: string; content: string }[]): Promise<st
 
 async function saveIP(playerId: string, ip: string) {
   const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-  const serviceKey  = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
   if (!supabaseUrl || !serviceKey) return;
 
   await fetch(`${supabaseUrl}/rest/v1/players?id=eq.${playerId}`, {
@@ -59,22 +59,25 @@ Deno.serve(async (req: Request) => {
     const scoreRaw = await callAI([
       {
         role: 'system',
-        content: `Você é um juiz de uma competição de prompts de IA sobre turismo.
+        content: `Você é um juiz de uma Batalha de Prompts para estudantes. O desafio é criar um prompt que instrua uma IA a agir como guia turístico de uma cidade.
+
+O que você avalia é a QUALIDADE DO PROMPT, não o conhecimento do participante sobre a cidade. Um prompt excelente pode falar de uma cidade que o participante nunca visitou — o que importa é ele saber instruir a IA bem.
 
 CRITÉRIOS (total 100 pts):
-- Clareza e especificidade (0–30 pts)
-- Criatividade e personalidade (0–30 pts)
-- Estrutura e instruções para IA (0–20 pts)
-- Uso do contexto/destino (0–20 pts)
+- Clareza e especificidade (0–30 pts): o prompt diz claramente o que a IA deve fazer? Tem instruções objetivas?
+- Criatividade e personalidade (0–30 pts): o prompt dá personalidade ao guia? Tem elementos originais, tom, estilo?
+- Estrutura e instruções para IA (0–20 pts): o prompt organiza bem o que quer? Usa técnicas de prompt (persona, formato, restrições)?
+- Uso do contexto/destino (0–20 pts): o prompt menciona ou aproveita o destino de alguma forma, mesmo que genérica?
 
-REGRAS DE PENALIDADE:
-- Prompt aleatório, ofensivo ou sem relação com turismo → nota máxima 25, valid=false
-- Muito curto/genérico (menos de 10 palavras) → nota máxima 40
-- Bom mas com falhas → 50–75
-- Excelente → 76–100
+REGRAS:
+- Prompt totalmente fora do tema turismo ou ofensivo → nota máxima 25, valid=false
+- Prompt muito curto ou genérico (menos de 10 palavras, ex: "seja um guia") → nota máxima 40
+- Não penalize por falta de conhecimento turístico — avalie apenas a habilidade de escrever prompts
+- Seja generoso com iniciantes: um prompt simples mas bem estruturado merece nota justa
+- Notas altas (76–100) para prompts que realmente instruem bem a IA com criatividade e clareza
 
 Responda SOMENTE com JSON puro (sem markdown, sem texto extra):
-{"score":<total>,"feedback":"<frase amigável em português, máx 2 frases>","criteria":{"clarity":<0-30>,"creativity":<0-30>,"structure":<0-20>,"context":<0-20>},"valid":<true|false>}`,
+{"score":<total>,"feedback":"<frase encorajadora em português, máx 2 frases, comente o que foi bom ou o que pode melhorar>","criteria":{"clarity":<0-30>,"creativity":<0-30>,"structure":<0-20>,"context":<0-20>},"valid":<true|false>}`,
       },
       { role: 'user', content: `Destino: ${city}\nPrompt do participante: ${userPrompt}` },
     ]);
@@ -87,14 +90,14 @@ Responda SOMENTE com JSON puro (sem markdown, sem texto extra):
     try {
       const clean = scoreRaw.replace(/^```json?\s*|\s*```$/g, '').trim();
       const p = JSON.parse(clean);
-      valid    = p.valid !== false;
+      valid = p.valid !== false;
       criteria = {
-        clarity:    Math.min(30, Math.max(0, Math.round(Number(p.criteria?.clarity    ?? 12)))),
+        clarity: Math.min(30, Math.max(0, Math.round(Number(p.criteria?.clarity ?? 12)))),
         creativity: Math.min(30, Math.max(0, Math.round(Number(p.criteria?.creativity ?? 12)))),
-        structure:  Math.min(20, Math.max(0, Math.round(Number(p.criteria?.structure  ?? 10)))),
-        context:    Math.min(20, Math.max(0, Math.round(Number(p.criteria?.context    ?? 8)))),
+        structure: Math.min(20, Math.max(0, Math.round(Number(p.criteria?.structure ?? 10)))),
+        context: Math.min(20, Math.max(0, Math.round(Number(p.criteria?.context ?? 8)))),
       };
-      score    = criteria.clarity + criteria.creativity + criteria.structure + criteria.context;
+      score = criteria.clarity + criteria.creativity + criteria.structure + criteria.context;
       feedback = String(p.feedback || feedback);
     } catch { /* usa defaults */ }
 

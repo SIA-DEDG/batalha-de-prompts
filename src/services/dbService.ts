@@ -66,6 +66,17 @@ export async function clearTodayRecordsByPhone(phone: string): Promise<void> {
   }
 }
 
+export async function getPlayerByPhone(phone: string): Promise<Pick<Player, 'name' | 'phone' | 'school'> | null> {
+  const { data } = await supabase
+    .from('players')
+    .select('name, phone, school')
+    .eq('phone', phone)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return data ?? null;
+}
+
 export async function createPlayer(
   data: Pick<Player, 'name' | 'phone' | 'school'>,
   skipDailyCheck = false,
