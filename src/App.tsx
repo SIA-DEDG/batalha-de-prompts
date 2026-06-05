@@ -92,7 +92,10 @@ function AuthView({ onAuth, error }: {
             {isAdminPhone ? 'Acesso administrativo. Digite a senha para continuar.' : 'Faça seu cadastro uma vez e participe da maior Batalha de Prompts do Piauí!'}
           </p>
         </div>
-        <img src="/logos/logo-soberania.svg" alt="Soberania IA" className="h-12 w-auto object-contain opacity-80" />
+        <div className="flex items-center space-x-4">
+          <img src="/logos/logo-soberania.svg" alt="Soberania IA" className="h-12 w-auto object-contain opacity-80" />
+          <img src="/logos/logo-pit.png" alt="PIT" className="h-10 w-auto object-contain opacity-80" />
+        </div>
       </div>
 
       {/* Formulário */}
@@ -232,7 +235,10 @@ function HomeView({ player, alreadyPlayed, session, isAdmin, onStart, onRanking,
         </p>
         <div className="mt-10 relative z-10 flex flex-col items-center space-y-3">
           <img src="/logos/logo-soberania.svg" alt="Soberania IA" className="h-10 w-auto object-contain opacity-80" />
-          <img src="/logos/logo-sia.svg" alt="SIA" className="h-14 w-auto object-contain opacity-80" />
+          <div className="flex items-center space-x-4">
+            <img src="/logos/logo-sia.svg" alt="SIA" className="h-14 w-auto object-contain opacity-80" />
+            <img src="/logos/logo-pit.png" alt="PIT" className="h-12 w-auto object-contain opacity-80" />
+          </div>
         </div>
       </div>
 
@@ -886,7 +892,12 @@ export default function App() {
       {/* Rodapé */}
       <footer className="shrink-0 bg-white border-t border-slate-100 px-6 py-2 flex items-center justify-center md:justify-between">
         <img src="/logos/logo-soberania.svg" alt="Soberania IA" className="hidden md:block h-8 w-auto object-contain opacity-75" />
-        <img src="/logos/logo-sia.svg" alt="SIA" className="h-8 w-auto object-contain opacity-85" />
+        <div className="flex items-center space-x-3">
+          <img src="/logos/logo-sia.svg" alt="SIA" className="h-8 w-auto object-contain opacity-85" />
+          <div className="bg-slate-800 rounded-lg px-2 py-1">
+            <img src="/logos/logo-pit.png" alt="PIT" className="h-6 w-auto object-contain" />
+          </div>
+        </div>
       </footer>
 
     </div>
