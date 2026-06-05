@@ -4,7 +4,7 @@ import { getStoredPlayer, saveStoredPlayer, getStoredSession, saveStoredSession 
 import { generateItineraryAndScore } from './services/aiService';
 import type { ScoreCriteria } from './services/aiService';
 import {
-  createPlayer, saveGameAttempt, fetchRanking, getPlayerRank, clearTodayRecordsByPhone, getPlayerByPhone,
+  createPlayer, saveGameAttempt, fetchRanking, getPlayerRank, clearTodayRecordsByPhone, getPlayerByPhone, checkPhonePlayedToday,
 } from './services/dbService';
 import type { RankingEntry } from './services/dbService';
 import type { View, StoredPlayer, GameData } from './types';
@@ -23,7 +23,8 @@ export default function App() {
     getStoredPlayer() ? 'HOME' : 'AUTH'
   );
   const [player, setPlayer] = useState<StoredPlayer | null>(getStoredPlayer);
-  const storedSession = getStoredSession();
+  const [alreadyPlayed, setAlreadyPlayed] = useState(false);
+  const [session, setSession] = useState(getStoredSession);
 
   const [playerId, setPlayerId] = useState('');
   const [gameData, setGameData] = useState<GameData>({ city: '', prompt: '', score: 0, rank: 0 });
@@ -35,14 +36,26 @@ export default function App() {
   const [rankingData, setRankingData] = useState<RankingEntry[]>([]);
   const [rankingLoading, setRankingLoading] = useState(false);
 
+  const isAdmin = player?.phone === ADMIN_PHONE;
+
   useEffect(() => {
     if (currentView === 'RANKING') {
       setRankingLoading(true);
       fetchRanking().then(setRankingData).finally(() => setRankingLoading(false));
     }
-  }, [currentView]);
 
-  const isAdmin = player?.phone === ADMIN_PHONE;
+    if (currentView === 'HOME' && player && !isAdmin && !IS_DEV) {
+      // Cache rápido via localStorage
+      const cached = getStoredSession();
+      if (cached) { setAlreadyPlayed(true); setSession(cached); return; }
+      // Fonte de verdade: banco — garante bloqueio em dispositivo compartilhado
+      checkPhonePlayedToday(player.phone).then(setAlreadyPlayed).catch(() => {});
+    }
+
+    if (currentView === 'HOME' && (isAdmin || IS_DEV)) {
+      setAlreadyPlayed(false);
+    }
+  }, [currentView, player?.phone]);
 
   const handleAuth = async (name: string, phone: string, school: string): Promise<string | null> => {
     const cleanPhone = phone.replace(/\D/g, '');
@@ -77,6 +90,8 @@ export default function App() {
     localStorage.removeItem('bp_player');
     localStorage.removeItem('bp_session');
     setPlayer(null);
+    setSession(null);
+    setAlreadyPlayed(false);
     setCurrentView('AUTH');
   };
 
@@ -115,6 +130,7 @@ export default function App() {
       setAiFeedback(feedback);
       setAiCriteria({ clarity, creativity, structure, context });
       saveStoredSession(playerId, score, rank);
+      setSession(getStoredSession());
       setCurrentView('RESULT');
     } catch (err) {
       setGameError(err instanceof Error ? err.message : 'Erro desconhecido');
@@ -137,6 +153,7 @@ export default function App() {
       setAiFeedback(feedback);
       setAiCriteria(criteria);
       saveStoredSession(playerId, score, rank);
+      setSession(getStoredSession());
       setCurrentView('RESULT');
     } catch (err) {
       setGameError(err instanceof Error ? err.message : 'Erro desconhecido');
@@ -158,8 +175,8 @@ export default function App() {
             {currentView === 'HOME' && player && (
               <HomeView
                 player={player}
-                alreadyPlayed={!IS_DEV && !!storedSession}
-                session={storedSession}
+                alreadyPlayed={alreadyPlayed}
+                session={session}
                 isAdmin={isAdmin}
                 onStart={handleStartGame}
                 onRanking={() => setCurrentView('RANKING')}
@@ -205,7 +222,7 @@ export default function App() {
               <RankingView
                 rankingData={rankingData}
                 rankingLoading={rankingLoading}
-                currentPlayerId={playerId || storedSession?.playerId || ''}
+                currentPlayerId={playerId || session?.playerId || ''}
                 onBack={() => setCurrentView(player ? 'HOME' : 'AUTH')}
               />
             )}

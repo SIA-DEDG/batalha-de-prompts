@@ -38,7 +38,7 @@ export interface AdminPlayer {
   total_attempts: number;
 }
 
-async function checkPhonePlayedToday(phone: string): Promise<boolean> {
+export async function checkPhonePlayedToday(phone: string): Promise<boolean> {
   const today = new Date().toISOString().slice(0, 10);
   const { count } = await supabase
     .from('players')

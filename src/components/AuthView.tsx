@@ -103,6 +103,7 @@ export default function AuthView({ onAuth, onLogin, onRanking }: Props) {
   const mobileFooter = (
     <div className="flex justify-center items-center space-x-4 md:hidden w-full pt-4 border-t border-slate-200 mt-4">
       <img src="/logos/logo-sia.svg" alt="SIA" className="h-10 w-auto object-contain opacity-80" />
+      <img src="/logos/logo-soberania-escuro.png" alt="Soberania IA" className="h-14 w-auto object-contain opacity-90" />
       <img src="/logos/logo-pit-preta.png" alt="PIT" className="h-16 w-auto object-contain opacity-80 rounded-lg" />
     </div>
   );
@@ -132,7 +133,7 @@ export default function AuthView({ onAuth, onLogin, onRanking }: Props) {
                     <Phone className="w-5 h-5 text-slate-400" />
                   </div>
                   <input required type="tel" placeholder="(86) 99999-9999"
-                    className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                    className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                     value={loginPhone}
                     onChange={e => setLoginPhone(formatPhone(e.target.value))} />
                 </div>
@@ -143,18 +144,18 @@ export default function AuthView({ onAuth, onLogin, onRanking }: Props) {
               )}
 
               <button type="submit" disabled={loginLoading}
-                className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-2xl font-bold text-lg shadow-lg transition-all flex items-center justify-center space-x-2 active:scale-95 disabled:opacity-60">
+                className="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-bold text-sm shadow transition-all flex items-center justify-center space-x-2 active:scale-95 disabled:opacity-60">
                 <ArrowRight className="w-5 h-5" />
                 <span>{loginLoading ? 'Buscando...' : 'Entrar'}</span>
               </button>
 
               <button type="button" onClick={() => { setMode('register'); setLoginError(''); }}
-                className="w-full py-4 bg-white border-2 border-slate-100 text-slate-600 hover:border-purple-200 hover:bg-purple-50 rounded-2xl font-bold text-base transition-all">
+                className="w-full py-2 bg-white border-2 border-slate-100 text-slate-600 hover:border-purple-200 hover:bg-purple-50 rounded-lg font-semibold text-sm transition-all">
                 Fazer novo cadastro
               </button>
 
               <button type="button" onClick={onRanking}
-                className="w-full py-4 bg-white border-2 border-slate-100 text-slate-700 hover:border-purple-200 hover:bg-purple-50 rounded-2xl font-bold text-lg transition-all flex items-center justify-center space-x-2 active:scale-95">
+                className="w-full py-2 bg-white border-2 border-slate-100 text-slate-700 hover:border-purple-200 hover:bg-purple-50 rounded-lg font-semibold text-sm transition-all flex items-center justify-center space-x-2 active:scale-95">
                 <Trophy className="w-5 h-5 text-purple-500" />
                 <span>Ver Ranking</span>
               </button>
@@ -204,10 +205,10 @@ export default function AuthView({ onAuth, onLogin, onRanking }: Props) {
                     <Icon className="w-5 h-5 text-slate-400" />
                   </div>
                   <input required type={type} placeholder={placeholder}
-                    className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                    className={`w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all${type === 'text' ? ' uppercase' : ''}`}
                     value={form[key as keyof typeof form]}
                     onChange={e => {
-                      const val = key === 'phone' ? formatPhone(e.target.value) : e.target.value;
+                      const val = key === 'phone' ? formatPhone(e.target.value) : e.target.value.toUpperCase();
                       setForm(f => ({ ...f, [key]: val }));
                     }} />
                 </div>
@@ -222,7 +223,7 @@ export default function AuthView({ onAuth, onLogin, onRanking }: Props) {
                     <Shield className="w-5 h-5 text-yellow-400" />
                   </div>
                   <input required type="password" placeholder="••••••••••"
-                    className="w-full pl-12 pr-4 py-4 bg-white border-2 border-yellow-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all"
+                    className="w-full pl-9 pr-3 py-2 bg-white border-2 border-yellow-200 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all"
                     value={form.password}
                     onChange={e => setForm(f => ({ ...f, password: e.target.value }))} />
                 </div>
@@ -260,7 +261,7 @@ export default function AuthView({ onAuth, onLogin, onRanking }: Props) {
 
             <button type="submit"
               disabled={authLoading || (!isAdminPhone && !lgpdAccepted)}
-              className={`w-full py-4 rounded-2xl font-bold text-lg shadow-lg transition-all flex items-center justify-center space-x-2 active:scale-95 mt-2 ${
+              className={`w-full py-2 rounded-lg font-bold text-sm shadow transition-all flex items-center justify-center space-x-2 active:scale-95 mt-2 ${
                 isAdminPhone
                   ? 'bg-gradient-to-r from-slate-700 to-slate-900 hover:from-slate-800 hover:to-black text-white disabled:opacity-60'
                   : lgpdAccepted
@@ -273,14 +274,14 @@ export default function AuthView({ onAuth, onLogin, onRanking }: Props) {
 
             {!isAdminPhone && (
               <button type="button" onClick={() => { setMode('login'); setPasswordError(''); }}
-                className="w-full py-4 bg-white border-2 border-slate-100 text-slate-600 hover:border-purple-200 hover:bg-purple-50 rounded-2xl font-bold text-base transition-all flex items-center justify-center space-x-2 active:scale-95">
+                className="w-full py-2 bg-white border-2 border-slate-100 text-slate-600 hover:border-purple-200 hover:bg-purple-50 rounded-lg font-semibold text-sm transition-all flex items-center justify-center space-x-2 active:scale-95">
                 <LogIn className="w-5 h-5 text-purple-400" />
                 <span>Já tenho cadastro</span>
               </button>
             )}
 
             <button type="button" onClick={onRanking}
-              className="w-full py-4 bg-white border-2 border-slate-100 text-slate-700 hover:border-purple-200 hover:bg-purple-50 rounded-2xl font-bold text-lg transition-all flex items-center justify-center space-x-2 active:scale-95">
+              className="w-full py-2 bg-white border-2 border-slate-100 text-slate-700 hover:border-purple-200 hover:bg-purple-50 rounded-lg font-semibold text-sm transition-all flex items-center justify-center space-x-2 active:scale-95">
               <Trophy className="w-5 h-5 text-purple-500" />
               <span>Ver Ranking</span>
             </button>

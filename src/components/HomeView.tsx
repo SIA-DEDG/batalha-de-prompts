@@ -33,7 +33,7 @@ export default function HomeView({ player, alreadyPlayed, session, isAdmin, onSt
       </div>
 
       {/* CTAs */}
-      <div className="flex flex-col items-center md:justify-center flex-1 p-6 md:p-12 space-y-6 text-center md:text-left md:items-start bg-slate-50 overflow-y-auto">
+      <div className="flex flex-col items-center md:justify-center flex-1 p-6 md:p-12 space-y-8 text-center md:text-left md:items-start bg-slate-50 overflow-y-auto">
 
         {/* Logo mobile — topo */}
         <div className="flex justify-center md:hidden w-full">
@@ -86,27 +86,27 @@ export default function HomeView({ player, alreadyPlayed, session, isAdmin, onSt
 
         <div className="w-full max-w-sm md:max-w-md space-y-4">
           {alreadyPlayed && !isAdmin ? (
-            <div className="w-full py-4 bg-slate-100 border-2 border-slate-200 text-slate-400 rounded-2xl font-bold text-lg flex items-center justify-center space-x-2 cursor-not-allowed select-none">
+            <div className="w-full py-4 bg-slate-100 border-2 border-slate-200 text-slate-400 rounded-lg font-bold text-sm flex items-center justify-center space-x-2 cursor-not-allowed select-none">
               <Moon className="w-5 h-5" />
               <span>Volte amanhã para jogar</span>
             </div>
           ) : (
             <button onClick={onStart}
-              className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-2xl font-bold text-lg shadow-lg shadow-purple-500/30 transition-all flex items-center justify-center space-x-2 active:scale-95">
+              className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-bold text-sm shadow shadow-purple-500/30 transition-all flex items-center justify-center space-x-2 active:scale-95">
               <Play className="w-5 h-5 fill-current" />
               <span>{isAdmin && alreadyPlayed ? 'Jogar novamente (Admin)' : 'Começar Jogo'}</span>
             </button>
           )}
 
           <button onClick={onRanking}
-            className="w-full py-4 bg-white border-2 border-slate-100 text-slate-700 hover:border-purple-200 hover:bg-purple-50 rounded-2xl font-bold text-lg shadow-sm transition-all flex items-center justify-center space-x-2 active:scale-95">
+            className="w-full py-4 bg-white border-2 border-slate-100 text-slate-700 hover:border-purple-200 hover:bg-purple-50 rounded-lg font-bold text-sm shadow-sm transition-all flex items-center justify-center space-x-2 active:scale-95">
             <Trophy className="w-5 h-5 text-purple-500" />
             <span>Ver Ranking</span>
           </button>
 
           {isAdmin && (
             <button onClick={onAdmin}
-              className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-2xl font-bold text-base transition-all flex items-center justify-center space-x-2 active:scale-95">
+              className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold text-sm transition-all flex items-center justify-center space-x-2 active:scale-95">
               <Shield className="w-4 h-4 text-yellow-400" />
               <span>Painel Administrativo</span>
             </button>
@@ -134,9 +134,10 @@ export default function HomeView({ player, alreadyPlayed, session, isAdmin, onSt
         )}
 
         {/* Footer mobile — logos SIA e PIT */}
-        <div className="flex justify-center items-center space-x-4 md:hidden w-full pt-4 border-t border-slate-200">
-          <img src="/logos/logo-sia.svg" alt="SIA" className="h-10 w-auto object-contain opacity-80" />
-          <img src="/logos/logo-pit-preta.png" alt="PIT" className="h-16 w-auto object-contain opacity-80 rounded-lg" />
+        <div className="flex justify-between items-center md:hidden w-full pt-6 border-t border-slate-200 px-2">
+          <img src="/logos/logo-sia.svg" alt="SIA" className="h-14 w-auto object-contain opacity-90" />
+          <img src="/logos/logo-soberania-escuro.png" alt="Soberania IA" className="h-14 w-auto object-contain opacity-90" />
+          <img src="/logos/logo-pit-preta.png" alt="PIT" className="h-14 w-auto object-contain opacity-90 rounded-lg" />
         </div>
       </div>
     </div>
