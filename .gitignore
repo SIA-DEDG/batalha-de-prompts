@@ -41,3 +41,6 @@ Thumbs.db
 # Arquivos temporários do Windows/OneDrive
 ~$*
 *.tmp
+
+# Supabase CLI
+supabase/.temp/
