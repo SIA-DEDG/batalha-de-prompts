@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Shield, Play, RefreshCw, Trash2, AlertTriangle, Loader2, Trophy, ClipboardList, Users, Plus, X, Archive } from 'lucide-react';
+import { Shield, Play, RefreshCw, Trash2, AlertTriangle, Loader2, Trophy, ClipboardList, Users, Plus, X, Archive, Download } from 'lucide-react';
 import {
   fetchAllPlayers, fetchPlayersByDate,
   deletePlayerById, saveSnapshotAndClear, fetchSnapshots,
@@ -57,6 +57,28 @@ export default function AdminView({ onBack, onPlay }: Props) {
     } finally {
       setClearing(false);
     }
+  };
+
+  const exportCSV = () => {
+    const header = ['Nome', 'Telefone', 'Escola', 'Melhor pontuação', 'Partidas', 'Cadastro'];
+    const rows = players.map(p => [
+      p.name,
+      p.phone,
+      p.school,
+      p.best_score ?? '',
+      p.total_attempts,
+      new Date(p.created_at).toLocaleString('pt-BR'),
+    ]);
+    const csv = [header, ...rows]
+      .map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(','))
+      .join('\r\n');
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `jogadores${dateFilter ? '_' + dateFilter : ''}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const totalPlayers = players.length;
@@ -225,6 +247,11 @@ export default function AdminView({ onBack, onPlay }: Props) {
               <button onClick={() => loadPlayers(dateFilter || undefined)} disabled={loadingPlayers}
                 className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-all">
                 <RefreshCw className={`w-4 h-4 ${loadingPlayers ? 'animate-spin' : ''}`} />
+              </button>
+              <button onClick={exportCSV} disabled={players.length === 0}
+                className="px-3 py-1.5 bg-green-50 text-green-700 hover:bg-green-100 disabled:opacity-40 text-xs font-bold rounded-lg transition-all flex items-center space-x-1">
+                <Download className="w-3 h-3" />
+                <span>CSV</span>
               </button>
               {!confirmClear ? (
                 <button onClick={() => setConfirmClear(true)}
