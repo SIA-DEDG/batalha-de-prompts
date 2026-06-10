@@ -174,3 +174,129 @@ export async function deleteAllPlayers(): Promise<void> {
   await supabase.from('game_attempts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
   await supabase.from('players').delete().neq('id', '00000000-0000-0000-0000-000000000000');
 }
+
+// ── Snapshots quantitativos ───────────────────────────────────────────────────
+
+export interface EventSnapshot {
+  id: string;
+  snapshot_date: string;
+  label: string | null;
+  total_players: number;
+  total_games: number;
+  avg_score: number;
+  max_score: number;
+  schools: Record<string, number> | null;
+  created_at: string;
+}
+
+export async function saveSnapshotAndClear(players: AdminPlayer[], label?: string): Promise<void> {
+  if (players.length === 0) {
+    await supabase.from('game_attempts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    await supabase.from('players').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    return;
+  }
+
+  const withScore = players.filter(p => p.best_score !== null);
+  const total_players = players.length;
+  const total_games = players.reduce((s, p) => s + p.total_attempts, 0);
+  const avg_score = withScore.length > 0
+    ? Math.round(withScore.reduce((s, p) => s + (p.best_score ?? 0), 0) / withScore.length)
+    : 0;
+  const max_score = withScore.length > 0
+    ? Math.max(...withScore.map(p => p.best_score ?? 0))
+    : 0;
+  const schools = players.reduce<Record<string, number>>((acc, p) => {
+    const s = p.school || 'Não informada';
+    acc[s] = (acc[s] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  await supabase.from('event_snapshots').insert({
+    snapshot_date: new Date().toISOString().slice(0, 10),
+    label: label ?? null,
+    total_players,
+    total_games,
+    avg_score,
+    max_score,
+    schools,
+  });
+
+  await supabase.from('game_attempts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+  await supabase.from('players').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+}
+
+export async function fetchSnapshots(): Promise<EventSnapshot[]> {
+  const { data, error } = await supabase
+    .from('event_snapshots')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw new Error(`Erro ao buscar snapshots: ${error.message}`);
+  return data ?? [];
+}
+
+// ── Consulta por data ─────────────────────────────────────────────────────────
+
+export async function fetchPlayersByDate(date: string): Promise<AdminPlayer[]> {
+  const { data: players, error } = await supabase
+    .from('players')
+    .select('id, name, phone, school, created_at')
+    .gte('created_at', `${date}T00:00:00.000Z`)
+    .lte('created_at', `${date}T23:59:59.999Z`)
+    .order('created_at', { ascending: false });
+
+  if (error) throw new Error(`Erro ao buscar jogadores: ${error.message}`);
+  if (!players) return [];
+
+  const { data: ranking } = await supabase.from('ranking').select('player_id, best_score, total_attempts');
+  const rankMap = new Map((ranking ?? []).map(r => [r.player_id, r]));
+
+  return players.map(p => ({
+    ...p,
+    best_score: rankMap.get(p.id)?.best_score ?? null,
+    total_attempts: rankMap.get(p.id)?.total_attempts ?? 0,
+  }));
+}
+
+// ── Inscrições físicas ────────────────────────────────────────────────────────
+
+export interface PhysicalRegistration {
+  id: string;
+  name: string;
+  phone: string | null;
+  school: string | null;
+  event_date: string;
+  notes: string | null;
+  created_at: string;
+}
+
+export async function fetchPhysicalRegistrations(date?: string): Promise<PhysicalRegistration[]> {
+  let query = supabase
+    .from('physical_registrations')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (date) query = query.eq('event_date', date);
+
+  const { data, error } = await query;
+  if (error) throw new Error(`Erro ao buscar inscrições físicas: ${error.message}`);
+  return data ?? [];
+}
+
+export async function createPhysicalRegistration(
+  data: Pick<PhysicalRegistration, 'name' | 'phone' | 'school' | 'event_date' | 'notes'>,
+): Promise<PhysicalRegistration> {
+  const { data: reg, error } = await supabase
+    .from('physical_registrations')
+    .insert(data)
+    .select()
+    .single();
+
+  if (error) throw new Error(`Erro ao salvar inscrição física: ${error.message}`);
+  return reg;
+}
+
+export async function deletePhysicalRegistration(id: string): Promise<void> {
+  const { error } = await supabase.from('physical_registrations').delete().eq('id', id);
+  if (error) throw new Error(`Erro ao deletar inscrição: ${error.message}`);
+}
